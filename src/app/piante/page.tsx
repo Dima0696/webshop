@@ -169,7 +169,7 @@ export default function PiantePage() {
             Accesso Richiesto
           </h1>
           <p style={{ color: '#2d5a27', marginBottom: '24px' }}>
-            È necessario effettuare l'accesso per visualizzare le piante
+            È necessario effettuare l&apos;accesso per visualizzare le piante
           </p>
           <Link 
             href="/" 
@@ -763,7 +763,7 @@ export default function PiantePage() {
                     fontWeight: '600'
                   }}
                 >
-                  Procedi con l'ordine
+                  Procedi con l&apos;ordine
                 </button>
               </div>
             </div>

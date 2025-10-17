@@ -212,7 +212,7 @@ export default function MagazzinoPage() {
             Accesso Richiesto
           </h1>
           <p style={{ color: '#2d5a27', marginBottom: '24px' }}>
-            È necessario effettuare l'accesso per visualizzare il magazzino
+            È necessario effettuare l&apos;accesso per visualizzare il magazzino
           </p>
           <Link 
             href="/" 
@@ -839,7 +839,7 @@ export default function MagazzinoPage() {
                     fontWeight: '600'
                   }}
                 >
-                  Procedi con l'ordine
+                  Procedi con l&apos;ordine
                 </button>
               </div>
             </div>
