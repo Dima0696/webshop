@@ -1,0 +1,715 @@
+
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionale Officina - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .nav-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: #2980b9;
+        }
+        
+        .nav-btn.active {
+            background: #e74c3c;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .page {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .page h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card p {
+            opacity: 0.9;
+        }
+        
+        .job-list {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .job-item {
+            display: grid;
+            grid-template-columns: 1fr 120px 100px 80px;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        
+        .job-item:last-child {
+            border-bottom: none;
+        }
+        
+        .job-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .job-header {
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .job-header:hover {
+            background: #34495e;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .form-section h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .work-items {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .work-item {
+            display: grid;
+            grid-template-columns: 2fr 100px 100px 80px 80px;
+            gap: 1rem;
+            padding: 0.8rem;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .work-item:last-child {
+            border-bottom: none;
+        }
+        
+        .work-header {
+            background: #ecf0f1;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .totals {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid #e74c3c;
+            margin-top: 1rem;
+        }
+        
+        .totals h3 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding: 0.3rem 0;
+        }
+        
+        .total-row.final {
+            border-top: 2px solid #e74c3c;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #e74c3c;
+        }
+        
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .status-pagato {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-sospeso {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-attesa {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+        
+        .btn:hover {
+            background: #219a52;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔧 Gestionale Officina - DEMO</h1>
+        <p>Sistema di gestione lavori per meccanico/benzinaio</p>
+        <div class="nav">
+            <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
+            <button class="nav-btn" onclick="showPage('nuovo-lavoro')">Nuovo Lavoro</button>
+            <button class="nav-btn" onclick="showPage('cerca')">Cerca</button>
+            <button class="nav-btn" onclick="showPage('dettaglio')">Dettaglio Lavoro</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="page active">
+            <h2>📊 Dashboard</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>23</h3>
+                    <p>Lavori questo mese</p>
+                </div>
+                <div class="stat-card">
+                    <h3>€3.450</h3>
+                    <p>Fatturato mensile</p>
+                </div>
+                <div class="stat-card">
+                    <h3>5</h3>
+                    <p>Auto in attesa</p>
+                </div>
+                <div class="stat-card">
+                    <h3>€150</h3>
+                    <p>Media per lavoro</p>
+                </div>
+            </div>
+
+            <h3>📋 Lavori Recenti</h3>
+            <div class="job-list">
+                <div class="job-item job-header">
+                    <div>Cliente / Targa</div>
+                    <div>Data</div>
+                    <div>Importo</div>
+                    <div>Stato</div>
+                </div>
+                <div class="job-item">
+                    <div>
+                        <strong>Mario Rossi</strong><br>
+                        <small>AB123CD - Fiat Punto</small>
+                    </div>
+                    <div>15/12/2024</div>
+                    <div><strong>€245,00</strong></div>
+                    <div><span class="status-badge status-pagato">PAGATO</span></div>
+                </div>
+                <div class="job-item">
+                    <div>
+                        <strong>Luca Bianchi</strong><br>
+                        <small>EF456GH - VW Golf</small>
+                    </div>
+                    <div>14/12/2024</div>
+                    <div><strong>€180,50</strong></div>
+                    <div><span class="status-badge status-sospeso">SOSPESO</span></div>
+                </div>
+                <div class="job-item">
+                    <div>
+                        <strong>Anna Verdi</strong><br>
+                        <small>IL789MN - Toyota Yaris</small>
+                    </div>
+                    <div>13/12/2024</div>
+                    <div><strong>€95,00</strong></div>
+                    <div><span class="status-badge status-attesa">IN ATTESA</span></div>
+                </div>
+                <div class="job-item">
+                    <div>
+                        <strong>Paolo Neri</strong><br>
+                        <small>OP012QR - BMW Serie 3</small>
+                    </div>
+                    <div>12/12/2024</div>
+                    <div><strong>€420,00</strong></div>
+                    <div><span class="status-badge status-pagato">PAGATO</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NUOVO LAVORO -->
+        <div id="nuovo-lavoro" class="page">
+            <h2>➕ Nuovo Lavoro</h2>
+            
+            <div class="form-grid">
+                <div class="form-section">
+                    <h3>👤 Dati Cliente</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Telefono</label>
+                            <input type="tel" placeholder="es. 339 1234567">
+                        </div>
+                        <div class="form-group">
+                            <label>Nome/Cognome</label>
+                            <input type="text" placeholder="es. Mario Rossi">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Codice Fiscale</label>
+                            <input type="text" placeholder="es. RSSMRA80A01H501Z">
+                        </div>
+                        <div class="form-group">
+                            <label>P. IVA</label>
+                            <input type="text" placeholder="es. 12345678901">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🚗 Dati Veicolo</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Targa</label>
+                            <input type="text" placeholder="es. AB123CD" style="text-transform: uppercase;">
+                        </div>
+                        <div class="form-group">
+                            <label>Chilometri</label>
+                            <input type="number" placeholder="es. 85000">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Anno</label>
+                            <input type="number" placeholder="es. 2015">
+                        </div>
+                        <div class="form-group">
+                            <label>Marca/Modello</label>
+                            <input type="text" placeholder="es. Fiat Punto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section" style="margin-top: 2rem;">
+                <h3>🔧 Lavori Eseguiti</h3>
+                <div class="work-items">
+                    <div class="work-item work-header">
+                        <div>Descrizione</div>
+                        <div>Ric. Orig.</div>
+                        <div>Riparazioni</div>
+                        <div>Prezzo</div>
+                        <div>Sconto</div>
+                    </div>
+                    <div class="work-item">
+                        <input type="text" placeholder="Cambio olio motore + filtro" style="border: none; background: transparent;">
+                        <input type="checkbox">
+                        <input type="checkbox" checked>
+                        <input type="number" placeholder="45.00" style="border: none; background: transparent;">
+                        <input type="number" placeholder="0" style="border: none; background: transparent;">
+                    </div>
+                    <div class="work-item">
+                        <input type="text" placeholder="Controllo freni anteriori" style="border: none; background: transparent;">
+                        <input type="checkbox" checked>
+                        <input type="checkbox">
+                        <input type="number" placeholder="25.00" style="border: none; background: transparent;">
+                        <input type="number" placeholder="5" style="border: none; background: transparent;">
+                    </div>
+                    <div class="work-item">
+                        <input type="text" placeholder="Aggiungi nuovo lavoro..." style="border: none; background: transparent; opacity: 0.5;">
+                        <input type="checkbox">
+                        <input type="checkbox">
+                        <input type="number" style="border: none; background: transparent;">
+                        <input type="number" style="border: none; background: transparent;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="totals">
+                <h3>💰 Riepilogo Costi</h3>
+                <div class="total-row">
+                    <span>Smaltimenti:</span>
+                    <span>€ 5,00</span>
+                </div>
+                <div class="total-row">
+                    <span>Mano d'Opera:</span>
+                    <span>€ 35,00</span>
+                </div>
+                <div class="total-row">
+                    <span>Subtotale:</span>
+                    <span>€ 100,00</span>
+                </div>
+                <div class="total-row">
+                    <span>IVA 22%:</span>
+                    <span>€ 22,00</span>
+                </div>
+                <div class="total-row final">
+                    <span>TOTALE:</span>
+                    <span>€ 122,00</span>
+                </div>
+                
+                <div style="margin-top: 1rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
+                        <input type="checkbox" style="transform: scale(1.2);">
+                        <strong>PAGATO</strong>
+                    </label>
+                </div>
+                
+                <div style="margin-top: 1rem;">
+                    <label>Data di Consegna:</label>
+                    <input type="date" style="margin-top: 0.5rem;">
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <button class="btn">💾 Salva Lavoro</button>
+                <button class="btn btn-secondary">🖨️ Stampa</button>
+                <button class="btn btn-secondary">❌ Annulla</button>
+            </div>
+        </div>
+
+        <!-- CERCA -->
+        <div id="cerca" class="page">
+            <h2>🔍 Cerca Lavori</h2>
+            
+            <input type="text" class="search-box" placeholder="🔍 Cerca per targa, nome cliente, telefono...">
+            
+            <div class="form-row" style="margin-bottom: 1.5rem;">
+                <div class="form-group">
+                    <label>Da Data:</label>
+                    <input type="date">
+                </div>
+                <div class="form-group">
+                    <label>A Data:</label>
+                    <input type="date">
+                </div>
+            </div>
+
+            <h3>📋 Risultati Ricerca</h3>
+            <div class="job-list">
+                <div class="job-item job-header">
+                    <div>Cliente / Targa</div>
+                    <div>Data</div>
+                    <div>Importo</div>
+                    <div>Stato</div>
+                </div>
+                <div class="job-item">
+                    <div>
+                        <strong>Mario Rossi - 339 1234567</strong><br>
+                        <small>AB123CD - Fiat Punto 2015</small><br>
+                        <small style="color: #666;">Cambio olio, controllo freni</small>
+                    </div>
+                    <div>15/12/2024</div>
+                    <div><strong>€245,00</strong></div>
+                    <div><span class="status-badge status-pagato">PAGATO</span></div>
+                </div>
+                <div class="job-item">
+                    <div>
+                        <strong>Mario Rossi - 339 1234567</strong><br>
+                        <small>AB123CD - Fiat Punto 2015</small><br>
+                        <small style="color: #666;">Tagliando completo</small>
+                    </div>
+                    <div>10/08/2024</div>
+                    <div><strong>€180,50</strong></div>
+                    <div><span class="status-badge status-pagato">PAGATO</span></div>
+                </div>
+                <div class="job-item">
+                    <div>
+                        <strong>Mario Rossi - 339 1234567</strong><br>
+                        <small>AB123CD - Fiat Punto 2015</small><br>
+                        <small style="color: #666;">Cambio pastiglie freni</small>
+                    </div>
+                    <div>15/03/2024</div>
+                    <div><strong>€95,00</strong></div>
+                    <div><span class="status-badge status-pagato">PAGATO</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DETTAGLIO LAVORO -->
+        <div id="dettaglio" class="page">
+            <h2>📄 Dettaglio Lavoro #2024-0156</h2>
+            
+            <div class="form-grid">
+                <div class="form-section">
+                    <h3>👤 Cliente</h3>
+                    <p><strong>Mario Rossi</strong></p>
+                    <p>📞 339 1234567</p>
+                    <p>🆔 RSSMRA80A01H501Z</p>
+                </div>
+
+                <div class="form-section">
+                    <h3>🚗 Veicolo</h3>
+                    <p><strong>Targa:</strong> AB123CD</p>
+                    <p><strong>Auto:</strong> Fiat Punto 2015</p>
+                    <p><strong>Km:</strong> 85.000</p>
+                </div>
+            </div>
+
+            <div class="form-section" style="margin-top: 2rem;">
+                <h3>🔧 Lavori Eseguiti - 15/12/2024</h3>
+                <div class="work-items">
+                    <div class="work-item work-header">
+                        <div>Descrizione</div>
+                        <div>Ric. Orig.</div>
+                        <div>Riparazioni</div>
+                        <div>Prezzo</div>
+                        <div>Sconto</div>
+                    </div>
+                    <div class="work-item">
+                        <div>Cambio olio motore + filtro olio</div>
+                        <div>❌</div>
+                        <div>✅</div>
+                        <div>€ 45,00</div>
+                        <div>€ 0</div>
+                    </div>
+                    <div class="work-item">
+                        <div>Controllo sistema frenante anteriore</div>
+                        <div>✅</div>
+                        <div>❌</div>
+                        <div>€ 25,00</div>
+                        <div>€ 5,00</div>
+                    </div>
+                    <div class="work-item">
+                        <div>Controllo livelli e pneumatici</div>
+                        <div>❌</div>
+                        <div>✅</div>
+                        <div>€ 15,00</div>
+                        <div>€ 0</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 4px;">
+                    <strong>Note:</strong> Cliente ha richiesto controllo generale. Tutto ok, prossimo tagliando tra 10.000 km.
+                </div>
+            </div>
+
+            <div class="totals">
+                <h3>💰 Riepilogo Finale</h3>
+                <div class="total-row">
+                    <span>Smaltimenti:</span>
+                    <span>€ 5,00</span>
+                </div>
+                <div class="total-row">
+                    <span>Mano d'Opera per Sistemazione:</span>
+                    <span>€ 35,00</span>
+                </div>
+                <div class="total-row">
+                    <span>Subtotale:</span>
+                    <span>€ 120,00</span>
+                </div>
+                <div class="total-row">
+                    <span>IVA 22%:</span>
+                    <span>€ 26,40</span>
+                </div>
+                <div class="total-row final">
+                    <span>TOTALE DOCUMENTO:</span>
+                    <span>€ 146,40</span>
+                </div>
+                
+                <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span class="status-badge status-pagato" style="font-size: 1rem; padding: 0.5rem 1rem;">✅ PAGATO</span>
+                    </div>
+                    <div>
+                        <strong>Data Consegna: 15/12/2024</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <button class="btn">✏️ Modifica</button>
+                <button class="btn btn-secondary">🖨️ Ristampa</button>
+                <button class="btn btn-secondary">📧 Invia Email</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            // Nascondi tutte le pagine
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Rimuovi classe active da tutti i bottoni
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Mostra la pagina selezionata
+            document.getElementById(pageId).classList.add('active');
+            
+            // Attiva il bottone corrispondente
+            event.target.classList.add('active');
+        }
+
+        // Simulazione calcolo automatico totali
+        document.addEventListener('input', function(e) {
+            if (e.target.type === 'number') {
+                // Qui andrà la logica per ricalcolare automaticamente i totali
+                console.log('Ricalcolo totali...');
+            }
+        });
+
+        // Simulazione ricerca in tempo reale
+        document.querySelector('.search-box')?.addEventListener('input', function(e) {
+            console.log('Ricerca per:', e.target.value);
+            // Qui andrà la logica di ricerca
+        });
+    </script>
+</body>
+</html>
+
+

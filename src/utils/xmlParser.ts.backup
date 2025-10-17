@@ -1,0 +1,141 @@
+interface InventoryItem {
+  id: string;
+  nome: string;
+  categoria: string;
+  colore: string;
+  misura: string;
+  qualita: string;
+  giacenza: number;
+  imballaggio: number;
+  prezzo: number;
+  descrizione?: string;
+  unitaMisura: string;
+  giorni?: number;
+}
+
+export function parseXMLInventory(xmlContent: string): InventoryItem[] {
+  const items: InventoryItem[] = [];
+  
+  // Estrae i dati dalle celle XML
+  const rows = xmlContent.split('<Row >').slice(2); // Salta header e prima riga
+  
+  let id = 1;
+  
+  for (const row of rows) {
+    if (!row.includes('<Cell') || row.includes('</Table>')) continue;
+    
+    const cells = extractCellsFromRow(row);
+    
+    if (cells.length >= 13) {
+      // Estrae i valori dalle celle
+      const magazzino = cells[0] || '';
+      const genere = cells[1] || '';
+      const clm = cells[3] || '';
+      const articolo = cells[4] || '';
+      const unitaMisura = cells[8] || '';
+      const giorni = parseFloat(cells[9]) || undefined;
+      const giacenza = parseFloat(cells[11]) || 0;
+      const imballaggio = parseFloat(cells[12]) || 1;
+      const prezzo = parseFloat(cells[13]) || 0;
+      
+      // Salta righe vuote o incomplete
+      if (!articolo || giacenza <= 0) continue;
+      
+      // Determina colore dal nome del prodotto
+      const colore = extractColorFromName(articolo);
+      
+      // Determina misura dai giorni o dal nome
+      const misura = extractSizeFromData(giorni, articolo, unitaMisura);
+      
+      // Determina qualità (per ora standard)
+      const qualita = 'A1';
+      
+      const item: InventoryItem = {
+        id: id.toString(),
+        nome: articolo.trim(),
+        categoria: genere.trim(),
+        colore,
+        misura,
+        qualita,
+        giacenza: Math.floor(giacenza),
+        imballaggio: Math.floor(imballaggio),
+        prezzo: Math.round(prezzo * 100) / 100, // Arrotonda a 2 decimali
+        unitaMisura: unitaMisura.trim(),
+        giorni
+      };
+      
+      items.push(item);
+      id++;
+    }
+  }
+  
+  return items;
+}
+
+function extractCellsFromRow(row: string): string[] {
+  const cells: string[] = [];
+  const cellMatches = row.match(/<Cell[^>]*>.*?<\/Cell>/g) || [];
+  
+  for (const cellMatch of cellMatches) {
+    const dataMatch = cellMatch.match(/<Data ss:Type="[^"]*">([^<]*)<\/Data>/);
+    const value = dataMatch ? dataMatch[1] : '';
+    cells.push(value);
+  }
+  
+  return cells;
+}
+
+function extractColorFromName(name: string): string {
+  const lowerName = name.toLowerCase();
+  
+  // Colori comuni nei nomi dei fiori
+  if (lowerName.includes('white') || lowerName.includes('bianco')) return 'Bianco';
+  if (lowerName.includes('red') || lowerName.includes('rosso')) return 'Rosso';
+  if (lowerName.includes('yellow') || lowerName.includes('giallo')) return 'Giallo';
+  if (lowerName.includes('pink') || lowerName.includes('rosa')) return 'Rosa';
+  if (lowerName.includes('purple') || lowerName.includes('viola')) return 'Viola';
+  if (lowerName.includes('blue') || lowerName.includes('blu')) return 'Blu';
+  if (lowerName.includes('orange') || lowerName.includes('arancio')) return 'Arancione';
+  if (lowerName.includes('green') || lowerName.includes('verde')) return 'Verde';
+  if (lowerName.includes('mix')) return 'Mix';
+  
+  // Colori specifici
+  if (lowerName.includes('swan')) return 'Bianco';
+  if (lowerName.includes('naomi')) return 'Rosso';
+  if (lowerName.includes('elegance')) return 'Rosa';
+  if (lowerName.includes('himalaya')) return 'Bianco';
+  if (lowerName.includes('avianna')) return 'Rosa';
+  if (lowerName.includes('bali')) return 'Giallo';
+  if (lowerName.includes('bubblicious')) return 'Mix';
+  if (lowerName.includes('dirty dancing')) return 'Rosa';
+  if (lowerName.includes('panorama')) return 'Mix';
+  if (lowerName.includes('summer drummer')) return 'Viola';
+  
+  return 'Naturale';
+}
+
+function extractSizeFromData(giorni?: number, nome?: string, um?: string): string {
+  // Se abbiamo i giorni, li usiamo come indicatore di "freschezza" o durata
+  if (giorni) {
+    if (giorni <= 3) return 'Piccolo';
+    if (giorni <= 5) return 'Medio';
+    if (giorni <= 7) return 'Grande';
+    return 'Extra Large';
+  }
+  
+  // Altrimenti basati sull'unità di misura
+  if (um === 'PZ') return 'Singolo';
+  if (um === 'ST') return 'Mazzo';
+  
+  // O cerca nel nome
+  const lowerName = nome?.toLowerCase() || '';
+  if (lowerName.includes('mini')) return 'Mini';
+  if (lowerName.includes('small')) return 'Piccolo';
+  if (lowerName.includes('medium')) return 'Medio';
+  if (lowerName.includes('large')) return 'Grande';
+  if (lowerName.includes('xl')) return 'Extra Large';
+  
+  return 'Standard';
+}
+
+export { type InventoryItem };
