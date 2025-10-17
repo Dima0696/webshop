@@ -291,11 +291,11 @@ export default function PiantePage() {
                         const bNum = parseInt(b.replace('D', ''));
                         return aNum - bNum;
                       }).map(diameter => (
-                        <label key={diameter} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                        <label key={diameter || ''} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                           <input 
                             type="checkbox" 
                             checked={selectedDiameter === diameter}
-                            onChange={(e) => setSelectedDiameter(e.target.checked ? diameter : '')}
+                            onChange={(e) => setSelectedDiameter(e.target.checked ? (diameter || '') : '')}
                             style={{ width: '14px', height: '14px' }} 
                           />
                           <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>{diameter}</span>
@@ -345,11 +345,11 @@ export default function PiantePage() {
                   </div>
                   <div style={{ paddingLeft: '8px' }}>
                     {colors.map(color => (
-                      <label key={color} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                      <label key={color || ''} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                         <input 
                           type="checkbox" 
                           checked={selectedColor === color}
-                          onChange={(e) => setSelectedColor(e.target.checked ? color : '')}
+                          onChange={(e) => setSelectedColor(e.target.checked ? (color || '') : '')}
                           style={{ width: '14px', height: '14px' }} 
                         />
                         <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>{color}</span>
@@ -370,11 +370,11 @@ export default function PiantePage() {
                     </div>
                     <div style={{ paddingLeft: '8px' }}>
                       {proveniences.sort().map(provenience => (
-                        <label key={provenience} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                        <label key={provenience || ''} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                           <input 
                             type="checkbox" 
                             checked={selectedProvenience === provenience}
-                            onChange={(e) => setSelectedProvenience(e.target.checked ? provenience : '')}
+                            onChange={(e) => setSelectedProvenience(e.target.checked ? (provenience || '') : '')}
                             style={{ width: '14px', height: '14px' }} 
                           />
                           <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>{provenience}</span>
@@ -396,11 +396,11 @@ export default function PiantePage() {
                     </div>
                     <div style={{ paddingLeft: '8px' }}>
                       {producers.sort().map(producer => (
-                        <label key={producer} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                        <label key={producer || ''} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                           <input 
                             type="checkbox" 
                             checked={selectedProducer === producer}
-                            onChange={(e) => setSelectedProducer(e.target.checked ? producer : '')}
+                            onChange={(e) => setSelectedProducer(e.target.checked ? (producer || '') : '')}
                             style={{ width: '14px', height: '14px' }} 
                           />
                           <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>{producer}</span>

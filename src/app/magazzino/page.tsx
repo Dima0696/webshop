@@ -420,11 +420,11 @@ export default function MagazzinoPage() {
                     </div>
                     <div style={{ paddingLeft: '8px' }}>
                       {proveniences.sort().map(provenience => (
-                        <label key={provenience} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                        <label key={provenience || ''} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                           <input 
                             type="checkbox" 
                             checked={selectedProvenience === provenience}
-                            onChange={(e) => setSelectedProvenience(e.target.checked ? provenience : '')}
+                            onChange={(e) => setSelectedProvenience(e.target.checked ? (provenience || '') : '')}
                             style={{ width: '14px', height: '14px' }} 
                           />
                           <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>{provenience}</span>
@@ -446,11 +446,11 @@ export default function MagazzinoPage() {
                     </div>
                     <div style={{ paddingLeft: '8px' }}>
                       {producers.sort().map(producer => (
-                        <label key={producer} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                        <label key={producer || ''} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                           <input 
                             type="checkbox" 
                             checked={selectedProducer === producer}
-                            onChange={(e) => setSelectedProducer(e.target.checked ? producer : '')}
+                            onChange={(e) => setSelectedProducer(e.target.checked ? (producer || '') : '')}
                             style={{ width: '14px', height: '14px' }} 
                           />
                           <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>{producer}</span>
